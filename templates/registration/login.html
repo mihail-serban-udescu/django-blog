@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title text-center">
+                    <i class="bi bi-box-arrow-in-right"></i> Autentificare
+                </h1>
+                <hr>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Username sau parolă greșită. Încearcă din nou.
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username</label>
+                        <input type="text" name="username" id="id_username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Parolă</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </form>
+
+                <p class="text-center mt-3 mb-0">
+                    <a href="{% url 'blog:post_list' %}">← Înapoi la blog</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

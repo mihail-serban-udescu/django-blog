@@ -1,0 +1,74 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<article class="card shadow-sm mb-4">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="max-height: 400px; object-fit: cover;">
+    {% endif %}
+    <div class="card-body">
+        <h1 class="card-title">{{ post.title }}</h1>
+        <p class="text-muted">
+            <i class="bi bi-person"></i> {{ post.author.username }} |
+            <i class="bi bi-calendar"></i> {{ post.created_at|date:"d M Y, H:i" }}
+            {% if post.category %}
+                | <i class="bi bi-tag"></i> {{ post.category.name }}
+            {% endif %}
+        </p>
+        <hr>
+        <div class="card-text" style="white-space: pre-wrap;">{{ post.content }}</div>
+    </div>
+
+    {% if user == post.author %}
+        <div class="card-footer bg-white">
+            <a href="{% url 'blog:post_update' post.slug %}" class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil"></i> Editează
+            </a>
+            <a href="{% url 'blog:post_delete' post.slug %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i> Șterge
+            </a>
+        </div>
+    {% endif %}
+</article>
+
+<section class="mb-4">
+    <h3><i class="bi bi-chat-dots"></i> Comentarii ({{ comments.count }})</h3>
+
+    {% for comment in comments %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <p class="mb-1"><strong>{{ comment.author.username }}</strong>
+                    <small class="text-muted">— {{ comment.created_at|date:"d M Y, H:i" }}</small>
+                </p>
+                <p class="mb-0">{{ comment.content }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Nu sunt comentarii încă.</p>
+    {% endfor %}
+</section>
+
+{% if user.is_authenticated %}
+    <section class="card shadow-sm">
+        <div class="card-body">
+            <h4>Adaugă un comentariu</h4>
+            <form method="post" action="{% url 'blog:add_comment' post.slug %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Trimite
+                </button>
+            </form>
+        </div>
+    </section>
+{% else %}
+    <div class="alert alert-warning">
+        <a href="{% url 'login' %}">Autentifică-te</a> pentru a lăsa un comentariu.
+    </div>
+{% endif %}
+
+<a href="{% url 'blog:post_list' %}" class="btn btn-secondary mt-3">
+    <i class="bi bi-arrow-left"></i> Înapoi la lista
+</a>
+{% endblock %}

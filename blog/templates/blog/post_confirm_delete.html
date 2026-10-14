@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Șterge postarea{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title text-danger">
+                    <i class="bi bi-exclamation-triangle"></i> Confirmare ștergere
+                </h1>
+                <p>Sigur vrei să ștergi postarea:</p>
+                <h5>"{{ post.title }}"</h5>
+                <p class="text-muted">Această acțiune este permanentă!</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Da, șterge
+                    </button>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-secondary">Anulează</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
